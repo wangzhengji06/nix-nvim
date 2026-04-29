@@ -25,7 +25,7 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
 	rocks = {
-		enable = false,
+		enabled = false,
 	},
 	spec = {
 		{
