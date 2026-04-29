@@ -182,7 +182,6 @@ return {
 			ruff = {},
 			jsonls = {},
 			sqlls = {},
-			terraformls = {},
 			yamlls = {},
 			bashls = {},
 			dockerls = {},
@@ -194,7 +193,6 @@ return {
 			-- ltex = {},
 			-- texlab = {},
 		}
-
 
 		for server, cfg in pairs(servers) do
 			-- For each LSP server (cfg), we merge:
