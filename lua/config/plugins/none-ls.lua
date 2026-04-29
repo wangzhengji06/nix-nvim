@@ -9,20 +9,6 @@ return {
 		local formatting = null_ls.builtins.formatting -- to setup formatters
 		local diagnostics = null_ls.builtins.diagnostics -- to setup linters
 
-		-- list of formatters & linters for mason to install
-		require("mason-null-ls").setup({
-			ensure_installed = {
-				"checkmake",
-				"prettier", -- ts/js formatter
-				"eslint_d", -- ts/js linter
-				"shfmt",
-				-- 'stylua', -- lua formatter; Already installed via Mason
-				-- 'ruff', -- Python linter and formatter; Already installed via Mason
-			},
-			-- auto-install configured formatters & linters (with null-ls)
-			automatic_installation = true,
-		})
-
 		local sources = {
 			diagnostics.checkmake,
 			formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown" } }),
