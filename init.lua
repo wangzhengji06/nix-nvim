@@ -36,5 +36,19 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Oil
 vim.keymap.set("n", "-", "<cmd>Oil<CR>")
 
+-- Clipboard
+vim.g.clipboard = {
+	name = "win32yank",
+	copy = {
+		["+"] = "win32yank.exe -i --crlf",
+		["*"] = "win32yank.exe -i --crlf",
+	},
+	paste = {
+		["+"] = "win32yank.exe -o --lf",
+		["*"] = "win32yank.exe -o --lf",
+	},
+	cache_enabled = 0,
+}
+
 -- Import dependency
 require("config.lazy")
