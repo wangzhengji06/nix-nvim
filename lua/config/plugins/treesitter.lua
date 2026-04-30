@@ -1,11 +1,10 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
     config = function()
       require'nvim-treesitter.configs'.setup {
         ensure_installed = { "c", "python", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
-        auto_install = true,
+        auto_install = false,
         highlight = {
           enable = true,
           disable = function(lang, buf)
