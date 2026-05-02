@@ -1,37 +1,66 @@
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.8",
+
+		branch = "master",
+		version = false,
+
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				build = "make",
+			},
 		},
+
 		config = function()
-			require("telescope").setup({
+			local telescope = require("telescope")
+			local builtin = require("telescope.builtin")
+
+			telescope.setup({
 				pickers = {
 					find_files = {
 						theme = "ivy",
 					},
 				},
+
 				extensions = {
-					fzf = {},
+					fzf = {
+						fuzzy = true,
+						override_generic_sorter = true,
+						override_file_sorter = true,
+						case_mode = "smart_case",
+					},
 				},
 			})
 
-			require("telescope").load_extension("fzf")
+			-- Use pcall so Telescope still works even if fzf-native failed to build.
+			pcall(telescope.load_extension, "fzf")
 
-			vim.keymap.set("n", "<space>fh", require("telescope.builtin").help_tags)
-			vim.keymap.set("n", "<space>fd", require("telescope.builtin").find_files)
+			vim.keymap.set("n", "<space>fh", builtin.help_tags, {
+				desc = "Telescope help tags",
+			})
+
+			vim.keymap.set("n", "<space>fd", builtin.find_files, {
+				desc = "Telescope find files",
+			})
+
 			vim.keymap.set("n", "<space>en", function()
-				require("telescope.builtin").find_files({
+				builtin.find_files({
 					cwd = vim.fn.stdpath("config"),
 				})
-			end)
+			end, {
+				desc = "Find Neovim config files",
+			})
+
 			vim.keymap.set("n", "<space>ep", function()
-				require("telescope.builtin").find_files({
+				builtin.find_files({
 					cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy"),
 				})
-			end)
+			end, {
+				desc = "Find lazy.nvim plugin files",
+			})
+
 			require("config.telescope.multigrep").setup()
 		end,
 	},
