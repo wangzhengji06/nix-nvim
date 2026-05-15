@@ -1,3 +1,15 @@
+local parsers = {
+	"c",
+	"python",
+	"lua",
+	"vim",
+	"vimdoc",
+	"query",
+	"markdown",
+	"markdown_inline",
+	"nix",
+}
+
 local filetypes = {
 	"c",
 	"python",
@@ -26,9 +38,18 @@ end
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+		branch = "main",
 		lazy = false,
 
 		config = function()
+			local ts = require("nvim-treesitter")
+
+			ts.setup({
+				install_dir = vim.fn.stdpath("data") .. "/site",
+			})
+
+			ts.install(parsers)
+
 			vim.api.nvim_create_autocmd("FileType", {
 				group = vim.api.nvim_create_augroup("UserTreesitter", {
 					clear = true,
