@@ -35,54 +35,28 @@ local function is_big_file(bufnr)
 	return ok and stat and stat.size > max_filesize
 end
 
-local function start_treesitter(bufnr)
-	if is_big_file(bufnr) then
-		return
-	end
-
-	pcall(vim.treesitter.start, bufnr)
-end
-
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-
-		-- nvim-treesitter should not be lazy-loaded.
+		branch = "main",
 		lazy = false,
 
-		-- Keep parsers in sync when Lazy updates the plugin.
-		build = ":TSUpdate",
-
-		-- Needed by the current nvim-treesitter setup.
-		dependencies = {
-			"neovim-treesitter/treesitter-parser-registry",
-		},
-
 		config = function()
-			local ok, treesitter = pcall(require, "nvim-treesitter")
-			if not ok then
-				return
-			end
+			local ts = require("nvim-treesitter")
 
-			-- Optional, but harmless with defaults.
-			if type(treesitter.setup) == "function" then
-				treesitter.setup()
-			end
-
-			-- Current nvim-treesitter API.
-			if type(treesitter.install) == "function" then
-				treesitter.install(parsers)
-			end
-
-			local group = vim.api.nvim_create_augroup("UserTreesitter", {
-				clear = true,
+			ts.setup({
+				install_dir = vim.fn.stdpath("data") .. "/site",
 			})
 
+			ts.install(parsers)
+
 			vim.api.nvim_create_autocmd("FileType", {
-				group = group,
+				group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
 				pattern = filetypes,
 				callback = function(args)
-					start_treesitter(args.buf)
+					if not is_big_file(args.buf) then
+						vim.treesitter.start(args.buf)
+					end
 				end,
 			})
 		end,
