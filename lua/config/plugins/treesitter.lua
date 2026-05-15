@@ -1,15 +1,4 @@
-local parsers = {
-	"c",
-	"python",
-	"lua",
-	"vim",
-	"vimdoc",
-	"query",
-	"markdown",
-	"markdown_inline",
-	"nix",
-}
-
+-- lua/config/treesitter.lua
 local filetypes = {
 	"c",
 	"python",
@@ -35,30 +24,14 @@ local function is_big_file(bufnr)
 	return ok and stat and stat.size > max_filesize
 end
 
-return {
-	{
-		"nvim-treesitter/nvim-treesitter",
-		branch = "main",
-		lazy = false,
-
-		config = function()
-			local ts = require("nvim-treesitter")
-
-			ts.setup({
-				install_dir = vim.fn.stdpath("data") .. "/site",
-			})
-
-			ts.install(parsers)
-
-			vim.api.nvim_create_autocmd("FileType", {
-				group = vim.api.nvim_create_augroup("UserTreesitter", { clear = true }),
-				pattern = filetypes,
-				callback = function(args)
-					if not is_big_file(args.buf) then
-						vim.treesitter.start(args.buf)
-					end
-				end,
-			})
-		end,
-	},
-}
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("UserTreesitter", {
+		clear = true,
+	}),
+	pattern = filetypes,
+	callback = function(args)
+		if not is_big_file(args.buf) then
+			pcall(vim.treesitter.start, args.buf)
+		end
+	end,
+})
