@@ -52,4 +52,3 @@ vim.g.clipboard = {
 
 -- Import dependency
 require("config.lazy")
-require("config.treesitter")
